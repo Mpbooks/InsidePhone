@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inside Phone — como um celular funciona</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#dce1e9;--panel:#e3e7ee;--tile:#eef0f4;--ink:#0e0f12;--dk:#1b1c20;--mut:#5d636e}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Manrope,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;padding:clamp(10px,2.4vw,36px) clamp(10px,2.4vw,36px) 170px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:28px}
+h2,h3,.u{font-family:Unbounded,sans-serif}
+
+/* PANEL */
+.panel{background:var(--panel);border-radius:6px;padding:clamp(18px,2.8vw,36px);position:relative;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 24px 40px -30px rgba(20,25,40,.4);transition:opacity .7s,transform .7s;scroll-margin-top:16px}
+body.tour .panel:not(.active){opacity:.4}
+.panel.dark{background:#15161a;color:#eceef2}
+.strip{display:flex;align-items:center;gap:18px;margin-bottom:34px}
+.strip i{flex:1;height:1px;background:currentColor;opacity:.85}
+.brand{display:flex;align-items:center;gap:8px;font:700 .95rem Unbounded;letter-spacing:.01em}
+.brand svg{width:20px;height:20px}
+.aud{font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;text-align:right}
+@media(max-width:700px){.aud{display:none}.strip i{display:none}}
+.hl{display:flex;align-items:flex-end;gap:18px;margin-bottom:30px}
+.hl h2{font-size:clamp(1.5rem,3.4vw,2.8rem);font-weight:700;text-transform:uppercase;line-height:1.1;letter-spacing:-.01em;max-width:780px}
+.hl i{flex:1;height:1px;background:currentColor;margin-bottom:10px;min-width:30px}
+.hl svg{width:26px;height:26px;margin-bottom:2px;flex:none}
+.foot{position:relative;height:10px;margin-top:30px}
+.foot i{position:absolute;left:0;right:0;top:5px;height:1px;background:currentColor;opacity:.85}
+.foot b{position:absolute;right:0;bottom:0;height:8px;width:90px;max-width:100%;background:currentColor;transition:width .35s linear}
+
+/* orbs */
+.orb{position:absolute;border-radius:50%;background:radial-gradient(circle at 32% 26%,#a2a5ae 0,#4a4b52 13%,#0b0b0d 46%,#000 100%);box-shadow:0 16px 26px -12px rgba(0,0,0,.55);z-index:3}
+.orb::after{content:"";position:absolute;left:22%;top:16%;width:26%;height:16%;border-radius:50%;background:rgba(255,255,255,.55);filter:blur(2px);transform:rotate(-30deg)}
+
+/* common blocks */
+.pills{display:flex;flex-wrap:wrap;gap:10px}
+.po{border:1px solid var(--ink);border-radius:99px;padding:9px 20px;font-size:.82rem;text-decoration:none;color:inherit;background:transparent;transition:.2s;font-family:inherit;cursor:pointer}
+.po:hover{background:var(--ink);color:#fff}
+.po.fill{background:var(--ink);color:#fff}
+.sub{font-size:.95rem;color:var(--mut);max-width:520px}
+.split{display:grid;grid-template-columns:1fr 1.08fr;gap:20px;align-items:stretch}
+.split.rev>.tile{order:2}
+.tile{background:var(--tile);border-radius:22px;display:grid;place-items:center;padding:clamp(24px,4vw,46px);position:relative;min-height:400px;overflow:hidden;border:1px solid rgba(14,15,18,.08)}
+.tile .tag{position:absolute;top:16px;left:16px;border:1px solid var(--ink);border-radius:99px;padding:5px 14px;font-size:.72rem;background:var(--tile)}
+.tile .no{position:absolute;right:18px;bottom:12px;font:700 .8rem Unbounded;opacity:.55}
+.ph{width:100%;max-width:500px;display:block}
+.ph img{width:100%;height:auto;display:block;mix-blend-mode:multiply}
+.fb{display:none;aspect-ratio:4/3;border:1px dashed var(--mut);border-radius:16px;place-items:center;text-align:center;color:var(--mut);font-size:.78rem;padding:20px}
+.col{display:flex;flex-direction:column;gap:14px}
+.lead{font-size:.98rem;color:#2b2f38}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cd{border:1px solid var(--ink);border-radius:22px;padding:18px 20px 20px;min-height:130px;position:relative;background:transparent;transition:transform .3s}
+.cd:hover{transform:translateY(-4px)}
+.cd .n{display:block;font:600 1.05rem Unbounded;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid currentColor}
+.cd p{font-size:.86rem;line-height:1.5}
+.cd.dk{background:var(--dk);color:#e9ebef;border-color:var(--dk)}
+.cd .ic{width:30px;height:30px;margin-bottom:12px}
+.cd .ic *{stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.stats{border:1px solid var(--ink);border-radius:24px;display:grid;grid-template-columns:repeat(3,1fr);margin-top:6px}
+.stats div{padding:18px 22px;border-left:1px solid var(--ink)}
+.stats div:first-child{border-left:0}
+.stats b{display:block;font:600 1.45rem Unbounded;letter-spacing:-.02em}
+.stats strong{display:block;font-size:.85rem;margin:2px 0 4px}
+.stats span{font-size:.78rem;color:var(--mut);display:block;line-height:1.4}
+@media(max-width:900px){.split{grid-template-columns:1fr}.split.rev>.tile{order:0}.tile{min-height:300px}.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.g2,.g3{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.stats div{border-left:0;border-top:1px solid var(--ink)}.stats div:first-child{border-top:0}}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:1.15fr 1fr;align-items:center;min-height:520px;position:relative}
+.hero .art{position:relative;z-index:2}
+.hero .art .ph{max-width:none;margin-left:-4%}
+.hero h1{font:800 clamp(1.8rem,4.2vw,3.5rem)/1.08 Unbounded;text-transform:uppercase;letter-spacing:-.015em;margin-bottom:22px}
+.hero .txt{position:relative;z-index:2;display:flex;flex-direction:column;gap:20px;align-items:flex-start}
+.wm{position:absolute;left:-2%;right:0;bottom:44px;font:800 clamp(4rem,15.5vw,12rem)/1 Unbounded;color:rgba(255,255,255,.55);letter-spacing:-.04em;white-space:nowrap;pointer-events:none;overflow:hidden;z-index:1}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.hero .art .ph{margin:0}}
+
+/* chrome tile */
+.chrome{border-radius:22px;min-height:260px;background:
+ radial-gradient(60% 50% at 25% 30%,#7d808a 0,transparent 60%),
+ radial-gradient(50% 60% at 75% 70%,#4b4d55 0,transparent 65%),
+ conic-gradient(from 200deg at 50% 50%,#050506,#2c2d33,#0a0a0c,#3c3e45,#050506);
+ background-size:140% 140%,140% 140%,100% 100%;animation:liq 12s ease-in-out infinite alternate;position:relative;overflow:hidden}
+.chrome span{position:absolute;left:18px;bottom:14px;color:#cfd2d8;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
+@keyframes liq{to{background-position:100% 100%,0 0,0 0;filter:contrast(1.15)}}
+.flowgrid{display:grid;grid-template-columns:1fr 1fr 0.9fr;gap:14px}
+.flowgrid .chrome{grid-row:1/3;grid-column:3}
+@media(max-width:900px){.flowgrid{grid-template-columns:1fr 1fr}.flowgrid .chrome{grid-row:auto;grid-column:1/3;min-height:140px}}
+@media(max-width:620px){.flowgrid{grid-template-columns:1fr}.flowgrid .chrome{grid-column:auto}}
+
+/* seg tabs */
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{border:1px solid var(--ink);background:transparent;border-radius:99px;padding:7px 16px;font:500 .8rem Manrope;cursor:pointer;color:var(--ink);transition:.2s}
+.seg button.on{background:var(--ink);color:#fff}
+.box{border:1px solid var(--ink);border-radius:20px;padding:16px 18px;font-size:.9rem;min-height:104px;animation:fd .4s}
+@keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.bits{font:500 .78rem ui-monospace,Menlo,monospace;border:1px solid var(--ink);border-radius:99px;padding:9px 18px;white-space:nowrap;overflow:hidden}
+
+/* battery */
+.bsv{width:100%;height:auto;margin:4px 0}
+.bsv text{font:600 11px Manrope;fill:var(--ink)}
+.bsv .blk{fill:var(--dk)}
+.bsv .blk2{fill:#6a6d76}
+.bsv .wire{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-dasharray:6 8;animation:dash 1s linear infinite}
+.bsv.chg .wire{animation-direction:reverse}
+@keyframes dash{to{stroke-dashoffset:-14}}
+.ion{fill:#fff;stroke:var(--ink);stroke-width:1.5;animation:mv 3.2s ease-in-out infinite}
+.bsv.chg .ion{animation-direction:reverse}
+@keyframes mv{0%{transform:translateX(0);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateX(200px);opacity:0}}
+.meter{border:1px solid var(--ink);border-radius:20px;padding:14px 18px}
+.meter label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--mut)}
+.meter input{width:100%;accent-color:#0e0f12;margin:8px 0}
+.meter .o{font:600 1rem Unbounded;color:var(--ink)}
+.meter .bar{height:10px;border-radius:99px;border:1px solid var(--ink);overflow:hidden;margin-top:10px}
+.meter .bar i{display:block;height:100%;background:var(--ink);width:50%;transition:width .3s}
+
+/* final */
+.big{font:800 clamp(2.6rem,9vw,7.6rem)/1 Unbounded;text-transform:uppercase;letter-spacing:-.04em;margin:10px 0 24px}
+.dark .po{border-color:#eceef2}.dark .po:hover{background:#eceef2;color:#111}
+.dark .sub{color:#a9adb7}
+
+/* DOCK */
+.dock{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:min(980px,calc(100% - 20px));background:#0e0f12;color:#fff;border-radius:24px;padding:12px 16px 12px 12px;z-index:50;box-shadow:0 20px 40px -10px rgba(0,0,0,.5);display:grid;grid-template-columns:auto 1fr auto;gap:6px 14px;align-items:center}
+.dock button{font-family:inherit;cursor:pointer;border:0;color:#fff}
+#pp{width:52px;height:52px;border-radius:50%;background:#fff;color:#0e0f12;display:grid;place-items:center;transition:transform .2s}
+#pp:hover{transform:scale(1.06)}
+#pp svg{width:22px;height:22px;fill:#0e0f12}
+.di small{display:block;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;opacity:.6}
+.di b{display:block;font:600 .9rem Unbounded;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.di .cap{display:block;font-size:.8rem;opacity:.8;min-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track{height:3px;background:rgba(255,255,255,.2);border-radius:9px;margin-top:6px;overflow:hidden}
+.track i{display:block;height:100%;width:0;background:#fff;transition:width .3s linear}
+.ctl{display:flex;gap:6px;align-items:center}
+.ctl button,.ctl select{background:transparent;border:1px solid rgba(255,255,255,.35);border-radius:99px;height:34px;padding:0 12px;font-size:.76rem;color:#fff;font-family:inherit}
+.ctl select option{color:#000}
+.ctl button.off{opacity:.45}
+.dots{grid-column:1/4;display:flex;gap:6px;justify-content:center}
+.dots button{flex:1;max-width:120px;height:22px;background:rgba(255,255,255,.14);border-radius:99px;font-size:.62rem;transition:.2s}
+.dots button.on{background:#fff;color:#0e0f12;font-weight:700}
+@media(max-width:700px){.dots button{font-size:0}.dots button.on{font-size:.62rem;flex:2}.ctl .hide{display:none}.dock{grid-template-columns:auto 1fr}.ctl{grid-column:1/3;justify-content:center}.dots{grid-column:1/3}}
+
+/* MODAL */
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;background:rgba(14,15,18,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .35s}
+.modal.on{opacity:1;pointer-events:auto}
+.mcard{position:relative;width:min(560px,100%);background:var(--panel);border:1px solid var(--ink);border-radius:26px;padding:clamp(24px,4vw,40px);transform:translateY(16px) scale(.98);transition:transform .35s;overflow:hidden}
+.modal.on .mcard{transform:none}
+.mcard .k{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.mcard h3{font:800 clamp(1.7rem,4.4vw,2.5rem)/1.05 Unbounded;text-transform:uppercase;letter-spacing:-.02em;margin:10px 0 12px;max-width:85%}
+.mcard p{color:var(--mut);font-size:.93rem;margin-bottom:22px;max-width:440px}
+.mb{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:15px 22px;border-radius:99px;border:1px solid var(--ink);background:transparent;color:var(--ink);font:600 .9rem Manrope;cursor:pointer;margin-bottom:10px;text-align:left;transition:.2s}
+.mb small{display:block;font:400 .74rem Manrope;opacity:.7;margin-top:1px}
+.mb .ar{font-size:1.15rem;flex:none}
+.mb.fill{background:var(--ink);color:#fff}
+.mb:hover,.mb:focus-visible{background:var(--ink);color:#fff;outline:none;transform:translateX(3px)}
+.mb.fill:hover,.mb.fill:focus-visible{background:#2a2c33}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- 1 · INTRODUÇÃO -->
+<section class="panel" id="s0">
+  <div class="strip"><span class="brand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg>INSIDE PHONE</span><i></i><span class="aud">Guia visual — como funciona um celular</span></div>
+  <div class="hero">
+    <span class="orb" style="width:44px;height:44px;left:2%;top:-4px"></span>
+    <span class="orb" style="width:26px;height:26px;right:5%;top:42%"></span>
+    <div class="art"><div class="ph"><img src="img/explodido.png" alt="Celular desmontado com todas as peças separadas" onerror="fb(this)"><div class="fb">Coloque a imagem em img/explodido.png</div></div></div>
+    <div class="txt">
+      <h1>Por dentro<br>do celular</h1>
+      <p class="sub">Cada peça faz uma coisa simples. Juntas, formam um computador que cabe no bolso. Aperte o play e deixe a página guiar você.</p>
+      <div class="pills"><a class="po fill" href="#s2">Tela</a><a class="po" href="#s3">Câmera</a><a class="po" href="#s4">Chip</a><a class="po" href="#s5">Bateria</a></div>
+    </div>
+    <div class="wm">ANATOMIA</div>
+  </div>
+  <div class="foot"><i></i><b></b></div>
+</section>
+
+<!-- 2 · VISÃO GERAL -->
+<section class="panel" id="s1">
+  <div class="strip"><span class="brand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg>INSIDE PHONE</span><i></i><span class="aud">Visão geral</span></div>
+  <div class="hl"><h2>Tudo segue o mesmo caminho</h2><i></i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg></div>
+  <div class="flowgrid">
+    <div class="cd"><b class="n">01</b><p>Entrada: o dedo toca o vidro ou a luz entra pela câmera. Sensores viram sinais elétricos.</p></div>
+    <div class="cd dk"><b class="n">02</b><p>Energia: a bateria entrega corrente estável para todos os componentes.</p></div>
+    <div class="chrome"><span>Milhares de ciclos por segundo</span></div>
+    <div class="cd dk"><b class="n">03</b><p>Processamento: o chip lê zeros e uns, executa o app e decide o que fazer.</p></div>
+    <div class="cd"><b class="n">04</b><p>Saída: a tela acende milhões de pontos de luz e você vê o resultado.</p></div>
+  </div>
+  <div class="foot"><i></i><b></b></div>
+</section>
+
+<!-- 3 · TELA -->
+<section class="panel" id="s2">
+  <div class="strip"><span class="brand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg>INSIDE PHONE</span><i></i><span class="aud">Peça 01 — Display</span></div>
+  <div class="hl"><h2>A tela: onde você vê e toca</h2><i></i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg></div>
+  <div class="split">
+    <div class="tile"><span class="tag">OLED + touch</span><span class="no">01</span>
+      <div class="ph"><img src="img/tela.png" alt="Tela do celular em camadas" onerror="fb(this)"><div class="fb">Coloque a imagem em img/tela.png</div></div></div>
+    <div class="col">
+      <p class="lead">Uma pilha de camadas com menos de 1 mm: o vidro protege, a grade de toque sente o dedo e o painel OLED acende cada pixel por conta própria.</p>
+      <div class="seg" id="segTela"><button class="on" data-i="0">Vidro</button><button data-i="1">Toque</button><button data-i="2">OLED</button><button data-i="3">Cabo flex</button></div>
+      <div class="box" id="boxTela"></div>
+    </div>
+  </div>
+  <div class="stats" style="margin-top:18px">
+    <div><b>2 mi+</b><strong>Pixels</strong><span>cada um com subpixels vermelho, verde e azul</span></div>
+    <div><b>120 Hz</b><strong>Atualização</strong><span>a imagem é redesenhada até 120 vezes por segundo</span></div>
+    <div><b>0 W</b><strong>No preto</strong><span>pixel preto no OLED fica apagado e não gasta energia</span></div>
+  </div>
+  <div class="foot"><i></i><b></b></div>
+</section>
+
+<!-- 4 · CÂMERA -->
+<section class="panel" id="s3">
+  <div class="strip"><span class="brand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg>INSIDE PHONE</span><i></i><span class="aud">Peça 02 — Câmera</span></div>
+  <div class="hl"><h2>A câmera: luz que vira dado</h2><i></i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg></div>
+  <div class="split rev">
+    <div class="tile"><span class="tag">Módulo + sensor CMOS</span><span class="no">02</span>
+      <div class="ph"><img src="img/camera.png" alt="Módulo da câmera" onerror="fb(this)"><div class="fb">Coloque a imagem em img/camera.png</div></div></div>
+    <div class="col">
+      <p class="lead">Quando um fóton atinge o silício do sensor, libera um elétron (efeito fotoelétrico). Mais luz, mais elétrons guardados naquele pixel.</p>
+      <div class="g2">
+        <div class="cd"><b class="n">01</b><p>As lentes dobram a luz e formam a imagem nítida sobre o sensor.</p></div>
+        <div class="cd dk"><b class="n">02</b><p>Filtro Bayer: cada pixel mede só vermelho, verde ou azul.</p></div>
+        <div class="cd dk"><b class="n">03</b><p>A carga vira tensão e um conversor a transforma em número.</p></div>
+        <div class="cd"><b class="n">04</b><p>O processador de imagem junta tudo, tira ruído e reconstrói as cores.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="stats" style="margin-top:18px">
+    <div><b>VCM</b><strong>Foco</strong><span>ímãs e bobinas deslizam a lente para frente e para trás</span></div>
+    <div><b>OIS</b><strong>Estabilização</strong><span>o giroscópio sente a tremida e a lente compensa</span></div>
+    <div><b>MIPI</b><strong>Conexão</strong><span>os contatos dourados do cabo levam os dados ao chip</span></div>
+  </div>
+  <div class="foot"><i></i><b></b></div>
+</section>
+
+<!-- 5 · CHIP -->
+<section class="panel" id="s4">
+  <div class="strip"><span class="brand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg>INSIDE PHONE</span><i></i><span class="aud">Peça 03 — Chips</span></div>
+  <div class="hl"><h2>O chip: cérebro e memória</h2><i></i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg></div>
+  <div class="split">
+    <div class="tile"><span class="tag">SoC · RAM · UFS · 5G</span><span class="no">03</span>
+      <div class="ph"><img src="img/chip.png" alt="Chip do celular" onerror="fb(this)"><div class="fb">Coloque a imagem em img/chip.png</div></div></div>
+    <div class="col">
+      <p class="lead">O transistor é um interruptor controlado por eletricidade: ligado vale 1, desligado vale 0. Bilhões deles formam portas lógicas que somam, comparam e decidem.</p>
+      <div class="bits" id="bits">01001000 01101001 00100001</div>
+      <div class="g2">
+        <div class="cd dk"><b class="n">CPU</b><p>Executa as instruções dos apps, passo a passo.</p></div>
+        <div class="cd"><b class="n">GPU</b><p>Faz milhares de contas em paralelo para desenhar gráficos.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="g3" style="margin-top:14px">
+    <div class="cd"><b class="n">NPU</b><p>Acelera inteligência artificial: rosto, voz e fotos.</p></div>
+    <div class="cd dk"><b class="n">RAM</b><p>Rápida e volátil: cada bit é carga num capacitor. Sem energia, apaga.</p></div>
+    <div class="cd"><b class="n">UFS</b><p>Memória flash: prende cargas em células e guarda seus arquivos desligado.</p></div>
+  </div>
+  <div class="stats" style="margin-top:14px">
+    <div><b>3–5 nm</b><strong>Transistor</strong><span>escala das estruturas nos chips atuais</span></div>
+    <div><b>~15 bi</b><strong>Quantidade</strong><span>de transistores num processador topo de linha</span></div>
+    <div><b>5G</b><strong>Modem</strong><span>converte dados em ondas de rádio e vice-versa</span></div>
+  </div>
+  <div class="foot"><i></i><b></b></div>
+</section>
+
+<!-- 6 · BATERIA -->
+<section class="panel" id="s5">
+  <div class="strip"><span class="brand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg>INSIDE PHONE</span><i></i><span class="aud">Peça 04 — Bateria</span></div>
+  <div class="hl"><h2>A bateria: energia guardada em química</h2><i></i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg></div>
+  <div class="split rev">
+    <div class="tile"><span class="tag">Íon-lítio · 3,87 V</span><span class="no">04</span>
+      <div class="ph"><img src="img/bateria.png" alt="Bateria de íon de lítio" onerror="fb(this)"><div class="fb">Coloque a imagem em img/bateria.png</div></div></div>
+    <div class="col">
+      <p class="lead">Dois eletrodos separados por um eletrólito. Os íons de lítio vão e voltam; os elétrons são obrigados a passar pelo circuito, e essa passagem é a corrente.</p>
+      <div class="seg" id="segBat"><button class="on" data-m="dis">Descarregando</button><button data-m="chg">Carregando</button></div>
+      <svg class="bsv" id="bsv" viewBox="0 0 560 230">
+        <rect class="blk" x="20" y="60" width="150" height="140" rx="14"/>
+        <rect class="blk2" x="390" y="60" width="150" height="140" rx="14"/>
+        <rect x="170" y="60" width="220" height="140" fill="none" stroke="#0e0f12" stroke-dasharray="3 5"/>
+        <text x="95" y="132" text-anchor="middle" style="fill:#fff">ÂNODO</text><text x="95" y="148" text-anchor="middle" style="fill:#bbb;font-size:9px">grafite</text>
+        <text x="465" y="132" text-anchor="middle" style="fill:#fff">CÁTODO</text><text x="465" y="148" text-anchor="middle" style="fill:#eee;font-size:9px">óxido com lítio</text>
+        <text x="280" y="214" text-anchor="middle">ELETRÓLITO</text>
+        <path class="wire" d="M95 60V28H465V60"/>
+        <text id="bwl" x="280" y="18" text-anchor="middle">APARELHO CONSUME A CORRENTE</text>
+        <circle class="ion" cx="190" cy="88" r="9" style="animation-delay:0s"/>
+        <circle class="ion" cx="190" cy="118" r="9" style="animation-delay:-.8s"/>
+        <circle class="ion" cx="190" cy="148" r="9" style="animation-delay:-1.6s"/>
+        <circle class="ion" cx="190" cy="178" r="9" style="animation-delay:-2.4s"/>
+        <text x="280" y="110" text-anchor="middle" style="font-size:10px">Li⁺ →</text>
+      </svg>
+      <div class="meter">
+        <label><span>Capacidade (Ah × 3,87 V = Wh)</span><span class="o" id="mah">3200 mAh</span></label>
+        <input type="range" id="cap" min="2000" max="6000" step="100" value="3200">
+        <div>Energia: <span class="o" id="wh">12,38 Wh</span></div>
+        <div class="bar"><i id="bbar"></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="stats" style="margin-top:18px">
+    <div><b>BMS</b><strong>Proteção</strong><span>circuito que vigia temperatura, tensão e corrente</span></div>
+    <div><b>Li⁺</b><strong>Íons</strong><span>viajam entre ânodo e cátodo pelo eletrólito</span></div>
+    <div><b>♻</b><strong>Descarte</strong><span>nunca perfure ou queime: leve a um ponto de reciclagem</span></div>
+  </div>
+  <div class="foot"><i></i><b></b></div>
+</section>
+
+<!-- 7 · OUTRAS PEÇAS -->
+<section class="panel" id="s6">
+  <div class="strip"><span class="brand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg>INSIDE PHONE</span><i></i><span class="aud">Peças de apoio</span></div>
+  <div class="hl"><h2>O que mais existe lá dentro</h2><i></i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg></div>
+  <div class="g3">
+    <div class="cd"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h3v3H8zM14 13h3v3h-3zM8 16h2M14 8h2"/></svg><b class="n">Placa (PCB)</b><p>Trilhas de cobre ligam todos os chips entre si.</p></div>
+    <div class="cd dk"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16v10H4zM8 7V4h8v3"/></svg><b class="n">Chassi</b><p>Dá rigidez, espalha o calor e nas laterais costuma ser antena.</p></div>
+    <div class="cd"><svg class="ic" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4zM15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/></svg><b class="n">Som</b><p>Uma bobina vibra num campo magnético e empurra o ar. O microfone faz o inverso.</p></div>
+    <div class="cd dk"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v18M7 8l5-5 5 5M5 14l7 7 7-7"/></svg><b class="n">Movimento</b><p>Acelerômetro e giroscópio medem deslocamento e rotação com silício microscópico.</p></div>
+    <div class="cd"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><path d="M6 12a6 6 0 0 1 6-6M18 12a6 6 0 0 1-6 6M2.5 12A9.5 9.5 0 0 1 12 2.5M21.5 12a9.5 9.5 0 0 1-9.5 9.5"/></svg><b class="n">Antenas</b><p>Wi-Fi, GPS e rede móvel convertem sinal elétrico em ondas de rádio.</p></div>
+    <div class="cd dk"><svg class="ic" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="3"/><path d="M10 18h4"/></svg><b class="n">Tampa</b><p>Protege tudo e deixa passar os sinais de rádio.</p></div>
+  </div>
+  <div class="foot"><i></i><b></b></div>
+</section>
+
+<!-- 8 · AGRADECIMENTOS -->
+<section class="panel dark" id="s7">
+  <div class="strip"><span class="brand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5l9 7-9 7zM22 5l-9 7 9 7z"/></svg>INSIDE PHONE</span><i></i><span class="aud">Encerramento</span></div>
+  <span class="orb" style="width:90px;height:90px;right:6%;top:70px;opacity:.95"></span>
+  <div class="big">Obrigado<br>por ouvir</div>
+  <p class="sub" style="margin-bottom:24px">Luz vira elétrons, toque vira campo elétrico, tudo vira zeros e uns, e a bateria mantém a engrenagem girando. Um supercomputador de bolso, feito de peças simples.</p>
+  <div class="pills"><button class="po" onclick="Tour.goTo(0,true)">Ouvir de novo</button><a class="po" href="#s0">Voltar ao topo</a></div>
+  <div class="foot"><i></i><b></b></div>
+</section>
+
+</div>
+
+<!-- POP-UP -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+  <div class="mcard">
+    <span class="orb" style="width:84px;height:84px;right:-18px;top:-18px"></span>
+    <span class="k">Fim da introdução</span>
+    <h3 id="mt">Vamos começar?</h3>
+    <p>Você pode continuar ouvindo que eu conduzo a página por cada peça, ou ler tudo no seu ritmo, com ou sem uma música calma de fundo.</p>
+    <button class="mb fill" id="mGo"><span>Continuar com a narração<small>A página rola sozinha acompanhando o áudio</small></span><span class="ar">→</span></button>
+    <button class="mb" id="mMus"><span>Vou ler sozinho, com música calma<small>Som ambiente suave, você controla no player</small></span><span class="ar">♪</span></button>
+    <button class="mb" id="mSil"><span>Vou ler sozinho, sem música<small>Silêncio total</small></span><span class="ar">○</span></button>
+  </div>
+</div>
+
+<!-- PLAYER -->
+<div class="dock" id="dock">
+  <button id="pp" aria-label="Reproduzir narração"><svg viewBox="0 0 24 24" id="ppi"><path d="M7 4l13 8-13 8z"/></svg></button>
+  <div class="di">
+    <small id="dstep">Narração guiada · 8 partes</small>
+    <b id="dtitle">Aperte play e a página conduz você</b>
+    <span class="cap" id="dcap"></span>
+    <div class="track"><i id="dfill"></i></div>
+  </div>
+  <div class="ctl">
+    <button id="prev" aria-label="Parte anterior">‹</button>
+    <button id="next" aria-label="Próxima parte">›</button>
+    <select id="spd" class="hide" aria-label="Velocidade"><option value="0.85">0.85×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option></select>
+    <button id="ccb" class="hide" title="Legendas">CC</button>
+    <button id="mus" class="off" title="Música ambiente">♪ Música</button>
+  </div>
+  <div class="dots" id="dots"></div>
+</div>
+
+<script>
+/*ROTEIRO*/
+const ROTEIRO=[
+{titulo:"Introdução",audio:"audio/introducao.mp3",texto:"Olá! Seja bem-vindo a este guia visual sobre como um celular funciona por dentro. Hoje vamos abrir o aparelho, peça por peça, e entender a ciência e a lógica por trás de cada uma. Na imagem principal você vê todos os componentes separados, como se o celular tivesse sido desmontado e flutuasse no ar: a tela, a estrutura metálica, a bateria, a placa com os chips, as câmeras e a tampa traseira. Você não precisa ler nada. É só deixar o áudio rolar que a página vai te levar sozinha de uma peça à outra. Se preferir ler no seu ritmo, pode pausar a qualquer momento. Vamos começar?"},
+{titulo:"Visão geral",audio:"audio/visao-geral.mp3",texto:"Antes de olhar cada peça, vale entender o caminho que a informação percorre. Tudo começa com uma entrada: o seu dedo encostando no vidro, ou a luz entrando pela câmera. Sensores transformam isso em sinais elétricos. Para que tudo funcione, a bateria fornece energia constante. Aí entra o processador, que lê esses sinais como zeros e uns, executa o aplicativo e decide o que fazer. Por fim, vem a saída: a tela acende milhões de pontos de luz e você enxerga o resultado. Esse ciclo se repete milhares de vezes por segundo, e é por isso que o celular parece responder instantaneamente."},
+{titulo:"A tela",audio:"audio/tela.mp3",texto:"A primeira peça é a tela, onde você vê e toca. Ela é feita de camadas finíssimas. Na frente fica o vidro, tratado quimicamente: íons de potássio ocupam o lugar dos de sódio e comprimem a superfície, o que dificulta trincas. Logo abaixo está a camada de toque, uma grade transparente de eletrodos que cria um campo elétrico. Como o seu dedo conduz eletricidade, ele altera esse campo no ponto tocado, e o chip calcula a posição exata. Depois vem o painel OLED. Cada pixel tem três subpixels, vermelho, verde e azul, feitos de material orgânico que emite luz própria quando passa corrente por ele. Por isso, onde a imagem é preta, o pixel simplesmente fica apagado e não gasta energia. Por fim, o cabo flexível laranja leva os sinais de imagem e de toque até a placa principal."},
+{titulo:"A câmera",audio:"audio/camera.mp3",texto:"Agora, a câmera. A luz que vem do ambiente entra pelas lentes, que a dobram para formar uma imagem nítida sobre o sensor. O sensor é uma grade com milhões de fotodiodos de silício. Quando um fóton, uma partícula de luz, atinge o silício, ele libera um elétron. É o efeito fotoelétrico. Quanto mais luz chega, mais elétrons se acumulam naquele pixel. Um filtro de cores, chamado padrão Bayer, faz cada pixel medir só vermelho, verde ou azul. Depois, um conversor transforma a carga elétrica em números, e o processador de imagem junta tudo, reduz o ruído e reconstrói as cores. E para a foto não sair tremida, pequenos ímãs e bobinas movem a lente enquanto o giroscópio detecta o tremor da sua mão. É a chamada estabilização óptica."},
+{titulo:"Os chips",audio:"audio/chip.mp3",texto:"Chegamos ao cérebro: os chips. A base de tudo é o transistor, um interruptor microscópico controlado por eletricidade. Ligado, vale um. Desligado, vale zero. Bilhões deles formam portas lógicas que somam, comparam e tomam decisões, e toda foto, música ou jogo é só uma longa sequência desses zeros e uns. O processador principal reúne a CPU, que executa as instruções dos aplicativos, a GPU, que desenha gráficos fazendo muitas contas ao mesmo tempo, e a NPU, especializada em inteligência artificial. A memória RAM é rápida, mas volátil: guarda cada bit como carga em um capacitor e apaga quando falta energia. Já o armazenamento UFS usa memória flash, que prende cargas em células e mantém seus arquivos mesmo com o aparelho desligado. E o modem cinco G converte dados em ondas de rádio e vice-versa."},
+{titulo:"A bateria",audio:"audio/bateria.mp3",texto:"Para tudo isso funcionar, precisamos de energia: a bateria de íon de lítio. Dentro dela há dois eletrodos, o ânodo, de grafite, e o cátodo, um óxido metálico com lítio, separados por um eletrólito. Quando o celular está em uso, íons de lítio viajam do ânodo para o cátodo pelo eletrólito, enquanto os elétrons são obrigados a passar pelo circuito do aparelho. Essa passagem é a corrente elétrica que alimenta tudo. Ao carregar, o carregador empurra os íons de volta. Repare no rótulo: três vírgula oitenta e sete volts e três mil e duzentos miliampères-hora. Multiplicando, dá cerca de doze watts-hora de energia. Um circuito de proteção vigia temperatura e tensão, e por isso a bateria nunca deve ser perfurada ou esmagada. Descarte sempre em um ponto de reciclagem."},
+{titulo:"Outras peças",audio:"audio/outras-pecas.mp3",texto:"Além dessas quatro peças, existem outras que também aparecem na imagem. A placa de circuito impresso liga todos os chips por trilhas de cobre. O chassi metálico dá rigidez, espalha o calor do processador e, nas laterais, muitas vezes funciona como antena. O alto-falante usa uma bobina que vibra dentro de um campo magnético para empurrar o ar e criar som, e o microfone faz o caminho inverso. O acelerômetro e o giroscópio medem movimento com estruturas de silício microscópicas. As antenas de Wi-Fi, GPS e rede móvel convertem sinais elétricos em ondas de rádio. E a tampa traseira protege tudo e deixa passar esses sinais."},
+{titulo:"Agradecimentos",audio:"audio/agradecimentos.mp3",texto:"E chegamos ao fim da nossa viagem por dentro do celular. A luz vira elétrons, o toque vira um campo elétrico, tudo vira zeros e uns, e a bateria mantém essa engrenagem funcionando. Um supercomputador de bolso, feito de peças que, vistas uma a uma, são surpreendentemente simples. Muito obrigado por ouvir até aqui. Espero que, da próxima vez que você desbloquear a tela, lembre de tudo o que acontece em uma fração de segundo. Até a próxima!"}
+];
+/*FIM*/
+
+function fb(img){img.style.display='none';img.nextElementSibling.style.display='grid'}
+
+/* ===== interações das peças ===== */
+const TELA=[
+ "<b>Vidro protetor.</b> Aluminossilicato reforçado por troca iônica: íons de potássio, maiores, entram no lugar dos de sódio e comprimem a superfície, dificultando trincas.",
+ "<b>Camada de toque.</b> Uma grade transparente de eletrodos cria um campo elétrico. O dedo conduz eletricidade e altera a capacitância no ponto tocado; o chip calcula a posição.",
+ "<b>Painel OLED.</b> Camadas orgânicas emitem luz própria quando atravessadas por corrente (eletroluminescência). Cada subpixel RGB é controlado por transistores finos (TFT).",
+ "<b>Cabo flex.</b> Película de poliimida, a cor laranja, com trilhas de cobre. Leva imagem e toque até a placa e dobra sem quebrar."
+];
+const bt=document.getElementById('boxTela');
+function tabTela(i){bt.innerHTML=TELA[i];bt.style.animation='none';bt.offsetHeight;bt.style.animation=''}
+document.querySelectorAll('#segTela button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#segTela button').forEach(x=>x.classList.remove('on'));b.classList.add('on');tabTela(+b.dataset.i)});
+tabTela(0);
+const bsv=document.getElementById('bsv'),bwl=document.getElementById('bwl');
+document.querySelectorAll('#segBat button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#segBat button').forEach(x=>x.classList.remove('on'));b.classList.add('on');const c=b.dataset.m==='chg';bsv.classList.toggle('chg',c);bwl.textContent=c?'CARREGADOR EMPURRA A CORRENTE':'APARELHO CONSOME A CORRENTE'});
+const cap=document.getElementById('cap');
+function calc(){const v=+cap.value;document.getElementById('mah').textContent=v+' mAh';document.getElementById('wh').textContent=(v/1000*3.87).toFixed(2).replace('.',',')+' Wh';document.getElementById('bbar').style.width=((v-2000)/4000*90+10)+'%'}
+cap.oninput=calc;calc();
+const bits=document.getElementById('bits');
+setInterval(()=>{let s='';for(let i=0;i<3;i++){let b='';for(let j=0;j<8;j++)b+=Math.random()>.5?1:0;s+=b+' '}bits.textContent=s},800);
+
+/* ===== MÚSICA CALMA (sintetizada no navegador) ===== */
+const Music=(()=>{
+  let ctx=null,master,bus,timer=null,on=false,lv=.16,step=0;const cbs=[];
+  const CH=[[130.81,261.63,329.63,392,493.88],[110,220,261.63,329.63,392],[87.31,174.61,220,261.63,329.63],[98,196,246.94,293.66,329.63]];
+  const BELL=[523.25,587.33,659.25,783.99,880,1046.5];
+  const emit=()=>cbs.forEach(f=>f(on));
+  function init(){
+    ctx=new(window.AudioContext||window.webkitAudioContext)();
+    master=ctx.createGain();master.gain.value=0;master.connect(ctx.destination);
+    bus=ctx.createBiquadFilter();bus.type='lowpass';bus.frequency.value=1800;
+    const dry=ctx.createGain();dry.gain.value=.55;const wet=ctx.createGain();wet.gain.value=.7;
+    const conv=ctx.createConvolver();const len=Math.floor(ctx.sampleRate*3.5);const b=ctx.createBuffer(2,len,ctx.sampleRate);
+    for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6)}
+    conv.buffer=b;bus.connect(dry);bus.connect(conv);conv.connect(wet);dry.connect(master);wet.connect(master);
+  }
+  function tone(f,t,dur,peak,type,att,rel){
+    const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;o.detune.value=(Math.random()-.5)*10;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+att);g.gain.setValueAtTime(peak,t+dur-rel);g.gain.linearRampToValueAtTime(0,t+dur);
+    o.connect(g);g.connect(bus);o.start(t);o.stop(t+dur+.1);
+  }
+  function chord(){
+    const t=ctx.currentTime+.05,c=CH[step%CH.length];step++;
+    c.forEach((f,i)=>{tone(f,t,10,i===0?.09:.045,i===0?'sine':'triangle',3,4);tone(f*1.003,t,10,.02,'sine',3.5,4)});
+    const n=2+Math.floor(Math.random()*2);
+    for(let k=0;k<n;k++){
+      const bt=t+1.5+Math.random()*5.5,f=BELL[Math.floor(Math.random()*BELL.length)];
+      const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=f;
+      g.gain.setValueAtTime(0,bt);g.gain.linearRampToValueAtTime(.05,bt+.03);g.gain.exponentialRampToValueAtTime(.0001,bt+3.5);
+      o.connect(g);g.connect(bus);o.start(bt);o.stop(bt+3.6);
+    }
+  }
+  function start(){
+    if(on)return;try{if(!ctx)init();ctx.resume()}catch(e){return}
+    on=true;master.gain.cancelScheduledValues(ctx.currentTime);master.gain.setTargetAtTime(lv,ctx.currentTime,1.2);
+    chord();timer=setInterval(chord,8000);emit();
+  }
+  function stop(){if(!on)return;on=false;clearInterval(timer);master.gain.cancelScheduledValues(ctx.currentTime);master.gain.setTargetAtTime(0,ctx.currentTime,.6);emit()}
+  function level(v){lv=v;if(on)master.gain.setTargetAtTime(lv,ctx.currentTime,.5)}
+  return{start,stop,level,toggle:()=>on?stop():start(),get on(){return on},onchange:f=>cbs.push(f)};
+})();
+
+/* ===== TOUR / NARRAÇÃO ===== */
+const Tour=(()=>{
+  const S=ROTEIRO, N=S.length;
+  const panels=S.map((_,i)=>document.getElementById('s'+i));
+  const $=id=>document.getElementById(id);
+  const pp=$('pp'),ppi=$('ppi'),dstep=$('dstep'),dtitle=$('dtitle'),dcap=$('dcap'),dfill=$('dfill'),dots=$('dots');
+  const PLAY='<path d="M7 4l13 8-13 8z"/>',PAUSE='<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
+  let cur=-1,playing=false,mode=null,prog=0,rate=1,token=0,lock=0,cc=true,readMode=false;
+  const audio=new Audio();audio.preload='auto';
+  let voice=null,sents=[],sidx=0;
+
+  S.forEach((s,i)=>{const b=document.createElement('button');b.textContent=(i+1)+' · '+s.titulo;b.onclick=()=>goTo(i,true);dots.appendChild(b)});
+
+  function pickVoice(){const v=speechSynthesis.getVoices();voice=v.find(x=>/pt-BR/i.test(x.lang)&&/google|natural|luciana|francisca|maria/i.test(x.name))||v.find(x=>/pt-BR/i.test(x.lang))||v.find(x=>/^pt/i.test(x.lang))||null}
+  if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+
+  function ui(){
+    ppi.innerHTML=playing?PAUSE:PLAY;pp.setAttribute('aria-label',playing?'Pausar narração':'Reproduzir narração');
+    document.body.classList.toggle('tour',cur>=0);
+    panels.forEach((p,i)=>p.classList.toggle('active',i===cur));
+    [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===cur));
+    if(cur>=0){dstep.textContent='Parte '+(cur+1)+' de '+N;dtitle.textContent=S[cur].titulo}
+  }
+  function setProg(p){prog=Math.max(0,Math.min(1,p));dfill.style.width=(prog*100)+'%';
+    if(cur>=0){const b=panels[cur].querySelector('.foot b');if(b)b.style.width=Math.max(90,prog*panels[cur].clientWidth*.9)+'px'}}
+  function resetBars(){document.querySelectorAll('.foot b').forEach(b=>b.style.width='90px')}
+
+  function stopSound(){token++;audio.pause();audio.onended=audio.onerror=audio.ontimeupdate=null;try{speechSynthesis.cancel()}catch(e){}}
+
+  function split(t){return t.match(/[^.!?]+[.!?]+(\s|$)|[^.!?]+$/g).map(s=>s.trim()).filter(Boolean)}
+  function speakFrom(i,from){
+    if(!('speechSynthesis' in window)){dcap.textContent='Seu navegador não tem voz sintética. Adicione os arquivos de áudio.';playing=false;ui();return}
+    const tok=++token;mode='tts';sents=split(S[i].texto);sidx=from||0;
+    const next=()=>{
+      if(tok!==token)return;
+      if(sidx>=sents.length){finish();return}
+      const u=new SpeechSynthesisUtterance(sents[sidx]);u.lang='pt-BR';if(voice)u.voice=voice;u.rate=rate;
+      dcap.textContent=cc?sents[sidx]:'';setProg(sidx/sents.length);
+      const done=e=>{if(tok!==token)return;if(e&&(e.error==='interrupted'||e.error==='canceled'))return;sidx++;next()};
+      u.onend=()=>done();u.onerror=done;speechSynthesis.speak(u);
+    };
+    speechSynthesis.cancel();next();
+  }
+  function playFile(i){
+    const tok=++token;mode='file';dcap.textContent='';
+    audio.onerror=()=>{if(tok===token)speakFrom(i,0)};
+    audio.onended=()=>{if(tok===token)finish()};
+    audio.ontimeupdate=()=>{if(tok===token&&audio.duration)setProg(audio.currentTime/audio.duration)};
+    audio.src=S[i].audio;audio.playbackRate=rate;
+    audio.play().catch(err=>{if(tok!==token)return;if(err&&err.name==='NotAllowedError'){playing=false;ui()}else speakFrom(i,0)});
+  }
+  function start(i){readMode=false;Music.level(.05);stopSound();setProg(0);playFile(i)}
+  function finish(){if(cur===0){playing=false;setProg(1);dcap.textContent='';ui();openModal();return}if(cur<N-1){goTo(cur+1,true)}else{playing=false;setProg(1);dcap.textContent='';ui()}}
+
+  function goTo(i,auto){
+    i=Math.max(0,Math.min(N-1,i));cur=i;lock=0;resetBars();setProg(0);
+    if(auto){playing=true;ui();start(i)}else{stopSound();playing=false;ui();panels[i].scrollIntoView({behavior:'smooth',block:'start'})}
+  }
+  function toggle(){
+    if(cur<0){goTo(readMode?Math.max(1,nearest()):0,true);return}
+    if(playing){playing=false;if(mode==='file')audio.pause();else{token++;try{speechSynthesis.cancel()}catch(e){}}ui()}
+    else{playing=true;ui();if(mode==='file'&&audio.src&&!audio.ended){audio.play().catch(()=>speakFrom(cur,0))}else if(mode==='tts'){speakFrom(cur,sidx)}else start(cur)}
+  }
+  pp.onclick=toggle;
+  $('prev').onclick=()=>stepBy(-1);
+  $('next').onclick=()=>stepBy(1);
+  $('spd').onchange=e=>{rate=+e.target.value;audio.playbackRate=rate;if(playing&&mode==='tts')speakFrom(cur,sidx)};
+  $('ccb').onclick=e=>{cc=!cc;e.target.classList.toggle('off',!cc);if(!cc)dcap.textContent=''};
+
+  /* pop-up pós-introdução */
+  const modal=$('modal'),mGo=$('mGo');
+  function openModal(){modal.classList.add('on');setTimeout(()=>mGo.focus(),350)}
+  function closeModal(){modal.classList.remove('on')}
+  function nearest(){let k=0;for(let i=0;i<N;i++){if(panels[i].getBoundingClientRect().bottom>220){k=i;break}k=i}return k}
+  function stepBy(d){
+    if(cur<0&&readMode){panels[Math.max(0,Math.min(N-1,nearest()+d))].scrollIntoView({behavior:'smooth',block:'start'});return}
+    goTo(cur<0?(d>0?1:0):cur+d,playing||cur<0);
+  }
+  function readOwn(music){
+    closeModal();stopSound();playing=false;readMode=true;cur=-1;lock=0;resetBars();setProg(0);ui();
+    dstep.textContent='Modo leitura';dtitle.textContent='Leia no seu ritmo';dcap.textContent='Aperte play para voltar à narração';
+    Music.level(.16);if(music)Music.start();else Music.stop();
+    panels[1].scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  mGo.onclick=()=>{closeModal();goTo(1,true)};
+  $('mMus').onclick=()=>readOwn(true);
+  $('mSil').onclick=()=>readOwn(false);
+  const mus=$('mus');
+  mus.onclick=()=>Music.toggle();
+  Music.onchange(on=>{mus.classList.toggle('off',!on);mus.setAttribute('aria-pressed',on)});
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('on'))readOwn(false)});
+
+  /* rolagem automática */
+  ['wheel','touchstart','keydown','mousedown'].forEach(ev=>addEventListener(ev,()=>{lock=Date.now()+5000},{passive:true}));
+  function follow(){
+    if(playing&&cur>=0&&Date.now()>lock){
+      const el=panels[cur],r=el.getBoundingClientRect(),top=r.top+scrollY,vh=innerHeight-150,extra=r.height-vh;
+      const target=extra>0?top-16+extra*prog:top-Math.max(16,(vh-r.height)/2);
+      const d=target-scrollY;if(Math.abs(d)>1)scrollTo({top:scrollY+d*.06,behavior:'instant'});
+    }
+    requestAnimationFrame(follow);
+  }
+  requestAnimationFrame(follow);
+  ui();
+  return{goTo,toggle};
+})();
+</script>
+</body>
+</html>
